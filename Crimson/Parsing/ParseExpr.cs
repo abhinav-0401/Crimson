@@ -10,7 +10,6 @@ internal partial class Parser
         
         if (double.TryParse(literal, out double doubleLiteral))
         {
-            Console.WriteLine("here");
             return new NumLitExpr(doubleLiteral, _currToken);
         }
 

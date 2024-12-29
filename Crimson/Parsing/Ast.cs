@@ -11,12 +11,12 @@ internal enum NodeKind
 
 internal abstract class Stmt
 {
-    public abstract NodeKind StmtKind();
+    internal abstract NodeKind StmtKind { get; }
 }
 
 internal abstract class Expr
 {
-    public abstract NodeKind ExprKind();
+    internal abstract NodeKind ExprKind { get; }
 }
 
 internal class NumLitExpr : Expr
@@ -30,7 +30,13 @@ internal class NumLitExpr : Expr
         _token = token;
     }
 
-    public override NodeKind ExprKind() { return NodeKind.NumLitExpr; }
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.NumLitExpr;
+        }
+    }
 
     public override string ToString()
     {
@@ -49,7 +55,13 @@ internal class PrefixExpr : Expr
         Expression = expr;
     }
 
-    public override NodeKind ExprKind() { return NodeKind.PrefixExpr; }
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.BinaryExpr;
+        }
+    }
 }
 
 internal class BinaryExpr : Expr
@@ -65,7 +77,13 @@ internal class BinaryExpr : Expr
         Right = right;
     }
 
-    public override NodeKind ExprKind() { return NodeKind.BinaryExpr; }
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.BinaryExpr;
+        }
+    }
 
     public override string ToString()
     {
@@ -76,13 +94,22 @@ internal class BinaryExpr : Expr
 internal class ExprStmt : Stmt
 {
     public Expr Expression { get; set; }
-    private Token _token;
 
-    internal ExprStmt(Expr expression, Token token)
+    internal ExprStmt(Expr expression)
     {
         Expression = expression;
-        _token = token;
     }
 
-    public override NodeKind StmtKind() { return Expression.ExprKind(); }
+    internal override NodeKind StmtKind
+    {
+        get
+        {
+            return Expression.ExprKind;
+        }
+    }
+
+    public override string ToString()
+    {
+        return Expression.ToString() ?? String.Format("something");
+    }
 }

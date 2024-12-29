@@ -24,6 +24,8 @@ internal partial class Parser
     private Token _currToken;
     private List<Token> _tokens;
 
+    public List<Stmt> Program { get; private set; } = new();
+
     private delegate Expr PrefixParselet(int bindingPower);
     private delegate Expr InfixParselet(Expr left, int bindingPower);
 
@@ -61,12 +63,22 @@ internal partial class Parser
             { TokenKind.Slash, ParseBinaryExpr },
         };
     }
-    
+
     internal void Parse()
     {
         while (IsNotEof())
         {
-            Console.WriteLine(ParseExpr((int)BindingPower.None)?.ToString());
+            var stmt = ParseStmt();
+            Program.Add(stmt);
+        }
+    }
+    
+    internal Stmt ParseStmt()
+    {
+        switch (_currToken.Kind)
+        {
+            default:
+                return ParseExprStmt((int)BindingPower.None);
         }
     }
 
@@ -76,13 +88,13 @@ internal partial class Parser
         {
             Expr left = prefixParselet((int)BindingPower.Prefix);
             Advance();
-            
-            if (_currToken.Kind == TokenKind.Eof)
+
+            if (_currToken.Kind == TokenKind.Eof || _currToken.Kind == TokenKind.Semicolon)
             {
                 if (left != null) { return left; }
             }
 
-            while (_currToken.Kind != TokenKind.Eof && bindingPower < _infixBindingPower[_currToken.Kind])
+            while (_currToken.Kind != TokenKind.Eof && _currToken.Kind != TokenKind.Semicolon && bindingPower < _infixBindingPower[_currToken.Kind])
             {
                 if (_infixes.TryGetValue(_currToken.Kind, out InfixParselet infixParselet))
                 {
@@ -114,14 +126,9 @@ internal partial class Parser
         return _tokens[_readPos];
     }
 
-    private bool Match(TokenKind kind)
-    {
-        return Peek().Kind == kind;
-    }
-
     private Token Expect(TokenKind kind, string msg)
     {
-        if (Peek().Kind != kind)
+        if (_currToken.Kind != kind)
         {
             if (msg == "" || msg == null)
             {
