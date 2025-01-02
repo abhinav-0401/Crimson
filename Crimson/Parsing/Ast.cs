@@ -62,6 +62,11 @@ internal class PrefixExpr : Expr
             return NodeKind.BinaryExpr;
         }
     }
+
+    public override string ToString()
+    {
+        return String.Format("(PrefixExpr\tOp: {0}\tExpr: {1})", Op.ToString(), Expression.ToString());
+    }
 }
 
 internal class BinaryExpr : Expr
@@ -87,7 +92,7 @@ internal class BinaryExpr : Expr
 
     public override string ToString()
     {
-        return String.Format("(BinaryExpr\tLeft: {0}\tRight: {1})", Left.ToString(), Right.ToString());
+        return String.Format("(BinaryExpr:\n\tOp: {0}\tLeft: {1}\tRight: {2})", Op.ToString(), Left.ToString(), Right.ToString());
     }
 }
 

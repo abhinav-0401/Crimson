@@ -25,6 +25,11 @@ internal class NumValue : Value
 
     internal override ValueType ValueKind
     { get { return ValueType.NumType; } }
+
+    public override string ToString()
+    {
+        return String.Format("(NumValue\tValue: {0})", Value);
+    }
 }
 
 internal class BoolValue : Value

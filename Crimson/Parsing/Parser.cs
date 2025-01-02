@@ -52,6 +52,8 @@ internal partial class Parser
         _prefixes = new Dictionary<TokenKind, PrefixParselet>()
         {
             { TokenKind.NumLit, ParseNumLitExpr },
+            { TokenKind.Plus, ParsePrefixExpr },
+            { TokenKind.Minus, ParsePrefixExpr },
             { TokenKind.Bang, ParsePrefixExpr },
         };
 
@@ -82,24 +84,21 @@ internal partial class Parser
         }
     }
 
+    // Method for Pratt Parsing Expressions
     internal Expr ParseExpr(int bindingPower)
     {
         if (_prefixes.TryGetValue(_currToken.Kind, out PrefixParselet prefixParselet))
         {
             Expr left = prefixParselet((int)BindingPower.Prefix);
-            Advance();
 
-            if (_currToken.Kind == TokenKind.Eof || _currToken.Kind == TokenKind.Semicolon)
-            {
+            if (Peek().Kind == TokenKind.Eof || Peek().Kind == TokenKind.Semicolon)
                 if (left != null) { return left; }
-            }
 
-            while (_currToken.Kind != TokenKind.Eof && _currToken.Kind != TokenKind.Semicolon && bindingPower < _infixBindingPower[_currToken.Kind])
+            while (Peek().Kind != TokenKind.Eof && Peek().Kind != TokenKind.Semicolon && bindingPower < _infixBindingPower[Peek().Kind])
             {
+                Advance();
                 if (_infixes.TryGetValue(_currToken.Kind, out InfixParselet infixParselet))
-                {
                     left = infixParselet(left, _infixBindingPower[_currToken.Kind]);
-                }     
             }
 
             return left;
