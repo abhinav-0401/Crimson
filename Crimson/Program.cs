@@ -8,8 +8,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        //Lexer lexer = new("-45.5f* +-fagan number");
-        Lexer lexer = new("-6 > 2 * 3; true;");
+        Lexer lexer = new("4 * (2 + 3) * 4;");
         var tokens = lexer.LexTokens();
 
         Parser parser = new(tokens);

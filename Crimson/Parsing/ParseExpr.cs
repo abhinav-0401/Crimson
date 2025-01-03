@@ -41,6 +41,15 @@ internal partial class Parser
         return new PrefixExpr(op, expr);
     }
 
+    internal Expr ParseGroupingExpr(int bindingPower)
+    {
+        Advance();
+        Expr expr = ParseExpr((int)BindingPower.None);
+        Advance();
+        Match(TokenKind.RParen, "");
+        return new GroupingExpr(expr);
+    }
+
     internal Expr ParseBinaryExpr(Expr left, int bindingPower)
     {
         TokenKind op = _currToken.Kind;

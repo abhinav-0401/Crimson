@@ -57,6 +57,7 @@ internal partial class Parser
             { TokenKind.Plus, ParsePrefixExpr },
             { TokenKind.Minus, ParsePrefixExpr },
             { TokenKind.Bang, ParsePrefixExpr },
+            { TokenKind.LParen, ParseGroupingExpr },
         };
 
         _infixes = new Dictionary<TokenKind, InfixParselet>()
@@ -98,20 +99,24 @@ internal partial class Parser
         {
             Expr left = prefixParselet((int)BindingPower.Prefix);
 
-            if (Peek().Kind == TokenKind.Eof || Peek().Kind == TokenKind.Semicolon)
-                if (left != null) { return left; }
-
-            while (Peek().Kind != TokenKind.Eof && Peek().Kind != TokenKind.Semicolon && bindingPower < _infixBindingPower[Peek().Kind])
+            while (Peek().Kind != TokenKind.Eof && Peek().Kind != TokenKind.Semicolon && bindingPower < PeekBindingPower())
             {
                 Advance();
                 if (_infixes.TryGetValue(_currToken.Kind, out InfixParselet infixParselet))
-                    left = infixParselet(left, _infixBindingPower[_currToken.Kind]);
+                    left = infixParselet(left, PeekBindingPower());
             }
 
             return left;
         }
 
         return null;
+    }
+
+    private int PeekBindingPower()
+    {
+        if (_infixBindingPower.TryGetValue(Peek().Kind, out int bp))
+            return bp;
+        return (int)BindingPower.None;
     }
 
     private bool IsNotEof()
@@ -129,7 +134,23 @@ internal partial class Parser
 
     private Token Peek()
     {
+        if (_readPos >= _tokens.Count)
+            return _tokens[_tokens.Count - 1];
+
         return _tokens[_readPos];
+    }
+
+    private void Match(TokenKind kind, string msg)
+    {
+        if (_currToken.Kind != kind)
+        {
+            if (msg == "" || msg == null)
+            {
+                msg = String.Format("Error: Expected token of type {0}, found token of type {1}\n", kind.ToString(), _currToken.Kind.ToString());
+            }
+            Console.WriteLine(msg);
+            Environment.Exit(1);
+        }
     }
 
     private Token Expect(TokenKind kind, string msg)
@@ -138,7 +159,7 @@ internal partial class Parser
         {
             if (msg == "" || msg == null)
             {
-                msg = String.Format("Error: Expected token of type {0}, found token of type {1}\n", kind.ToString(), Peek().Kind.ToString());
+                msg = String.Format("Error: Expected token of type {0}, found token of type {1}\n", kind.ToString(), _currToken.Kind.ToString());
             }
             Console.WriteLine(msg);
             Environment.Exit(1);

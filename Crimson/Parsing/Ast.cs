@@ -95,6 +95,29 @@ internal class PrefixExpr : Expr
     }
 }
 
+internal class GroupingExpr : Expr
+{
+    public Expr Expression { get; set; }
+
+    internal GroupingExpr(Expr expr)
+    {
+        Expression = expr;
+    }
+
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.BinaryExpr;
+        }
+    }
+
+    public override string ToString()
+    {
+        return String.Format("(GroupingExpr\tExpr: {0})", Expression.ToString());
+    }
+}
+
 internal class BinaryExpr : Expr
 {
     public TokenKind Op { get; set; }

@@ -8,7 +8,7 @@ internal partial class Parser
     {
         Expr expr = ParseExpr(bindingPower);
         Advance();
-        Expect(TokenKind.Semicolon, "Expected Semicolon after expression");
+        Expect(TokenKind.Semicolon, "");
         return new ExprStmt(expr);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Crimson.Evaluation;
 
-internal class Eval
+internal static class Eval
 {
     internal static void EvalProgram(List<Stmt> Program)
     {
@@ -38,6 +38,7 @@ internal class Eval
             BoolLitExpr boolLitExpr => new BoolValue(boolLitExpr.Value),
             PrefixExpr prefixExpr => EvalPrefixExpr(prefixExpr),
             BinaryExpr binaryExpr => EvalBinaryExpr(binaryExpr),
+            GroupingExpr groupingExpr => EvalExpr(groupingExpr.Expression),
             _ => new NumValue(-100),
         };
     }
