@@ -43,4 +43,9 @@ internal class BoolValue : Value
 
     internal override ValueType ValueKind
     { get { return ValueType.BoolType; } }
+
+    public override string ToString()
+    {
+        return String.Format("(BoolValue\tValue: {0})", Value);
+    }
 }

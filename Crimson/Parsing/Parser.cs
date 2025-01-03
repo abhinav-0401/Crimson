@@ -52,6 +52,8 @@ internal partial class Parser
         _prefixes = new Dictionary<TokenKind, PrefixParselet>()
         {
             { TokenKind.NumLit, ParseNumLitExpr },
+            { TokenKind.True, ParseBoolLitExpr },
+            { TokenKind.False, ParseBoolLitExpr },
             { TokenKind.Plus, ParsePrefixExpr },
             { TokenKind.Minus, ParsePrefixExpr },
             { TokenKind.Bang, ParsePrefixExpr },
@@ -63,6 +65,11 @@ internal partial class Parser
             { TokenKind.Minus, ParseBinaryExpr },
             { TokenKind.Star, ParseBinaryExpr },
             { TokenKind.Slash, ParseBinaryExpr },
+            { TokenKind.Gt, ParseBinaryExpr },
+            { TokenKind.GtEq, ParseBinaryExpr },
+            { TokenKind.Lt, ParseBinaryExpr },
+            { TokenKind.LtEq, ParseBinaryExpr },
+            { TokenKind.EqEq, ParseBinaryExpr },
         };
     }
 

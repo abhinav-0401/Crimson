@@ -45,5 +45,7 @@ internal enum TokenKind
     Return, // RETURN
     Print,  // PRINT
     Loop,   // LOOP
-    Break   // BREAK
+    Break,   // BREAK
+    True,
+    False,
 }

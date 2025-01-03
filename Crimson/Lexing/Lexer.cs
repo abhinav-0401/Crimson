@@ -21,6 +21,8 @@ internal class Lexer
         { "print", TokenKind.Print },  // PRINT
         { "loop", TokenKind.Loop },    // LOOP
         { "break", TokenKind.Break },   // BREAK
+        { "true", TokenKind.True },   // BREAK
+        { "false", TokenKind.False },   // BREAK
     };
 
     internal List<Token> Tokens { get; set; } = new List<Token>();    

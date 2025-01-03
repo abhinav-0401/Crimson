@@ -5,6 +5,7 @@ namespace Crimson.Parsing;
 internal enum NodeKind
 {
     NumLitExpr,
+    BoolLitExpr,
     PrefixExpr,
     BinaryExpr,
 }
@@ -41,6 +42,31 @@ internal class NumLitExpr : Expr
     public override string ToString()
     {
         return String.Format("(NumLitExpr\tValue: {0})", Value);
+    }
+}
+
+internal class BoolLitExpr : Expr
+{
+    public bool Value { get; set; }
+    private Token _token;
+    
+    internal BoolLitExpr(bool value, Token token)
+    {
+        Value = value;
+        _token = token;
+    }
+
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.BoolLitExpr;
+        }
+    }
+
+    public override string ToString()
+    {
+        return String.Format("(BoolLitExpr\tValue: {0})", Value);
     }
 }
 

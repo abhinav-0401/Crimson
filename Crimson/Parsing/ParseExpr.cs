@@ -18,6 +18,21 @@ internal partial class Parser
         return null;
     }
 
+    internal Expr ParseBoolLitExpr(int bindingPower)
+    {
+        string literal = _currToken.Literal;
+
+        if (literal == "true")
+        {
+            return new BoolLitExpr(true, _currToken);
+        }
+        else
+        {
+            return new BoolLitExpr(false, _currToken);
+        }
+
+    }
+
     internal Expr ParsePrefixExpr(int bindingPower)
     {
         TokenKind op = _currToken.Kind;
