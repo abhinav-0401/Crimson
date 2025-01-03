@@ -6,8 +6,11 @@ internal enum NodeKind
 {
     NumLitExpr,
     BoolLitExpr,
+    NilLitExpr,
     PrefixExpr,
     BinaryExpr,
+    PrintStmt,
+    PrintAstStmt,
 }
 
 internal abstract class Stmt
@@ -67,6 +70,24 @@ internal class BoolLitExpr : Expr
     public override string ToString()
     {
         return String.Format("(BoolLitExpr\tValue: {0})", Value);
+    }
+}
+
+internal class NilLitExpr : Expr
+{
+    public string Value { get; set; }
+    
+    internal override NodeKind ExprKind
+    {
+        get
+        {
+            return NodeKind.NilLitExpr;
+        }
+    }
+
+    public override string ToString()
+    {
+        return String.Format("(Nil\tValue: {0})", Value);
     }
 }
 
@@ -165,5 +186,51 @@ internal class ExprStmt : Stmt
     public override string ToString()
     {
         return Expression.ToString() ?? String.Format("something");
+    }
+}
+
+internal class PrintStmt : Stmt
+{
+    public Expr Expression { get; set; }
+
+    internal PrintStmt(Expr expression)
+    {
+        Expression = expression;
+    }
+
+    internal override NodeKind StmtKind
+    {
+        get
+        {
+            return NodeKind.PrintStmt;
+        }
+    }
+
+    public override string ToString()
+    {
+        return String.Format("(__Builtin: Print\tArg:\t{0})", Expression.ToString()) ?? String.Format("something");
+    }
+}
+
+internal class PrintAstStmt : Stmt
+{
+    public Expr Expression { get; set; }
+
+    internal PrintAstStmt(Expr expression)
+    {
+        Expression = expression;
+    }
+
+    internal override NodeKind StmtKind
+    {
+        get
+        {
+            return NodeKind.PrintAstStmt;
+        }
+    }
+
+    public override string ToString()
+    {
+        return String.Format("(__Builtin: PrintAst\tArg:\t{0})", Expression.ToString()) ?? String.Format("something");
     }
 }

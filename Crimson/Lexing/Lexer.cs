@@ -19,10 +19,12 @@ internal class Lexer
         { "else", TokenKind.Else },    // ELSE
         { "return", TokenKind.Return },// RETURN
         { "print", TokenKind.Print },  // PRINT
+        { "print_ast", TokenKind.PrintAst },  // PRINT_AST
         { "loop", TokenKind.Loop },    // LOOP
         { "break", TokenKind.Break },   // BREAK
         { "true", TokenKind.True },   // BREAK
         { "false", TokenKind.False },   // BREAK
+        { "nil", TokenKind.Nil },   // BREAK
     };
 
     internal List<Token> Tokens { get; set; } = new List<Token>();    

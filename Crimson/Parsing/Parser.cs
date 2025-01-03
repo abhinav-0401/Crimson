@@ -54,6 +54,7 @@ internal partial class Parser
             { TokenKind.NumLit, ParseNumLitExpr },
             { TokenKind.True, ParseBoolLitExpr },
             { TokenKind.False, ParseBoolLitExpr },
+            { TokenKind.Nil, ParseBoolLitExpr },
             { TokenKind.Plus, ParsePrefixExpr },
             { TokenKind.Minus, ParsePrefixExpr },
             { TokenKind.Bang, ParsePrefixExpr },
@@ -83,42 +84,6 @@ internal partial class Parser
         }
     }
     
-    internal Stmt ParseStmt()
-    {
-        switch (_currToken.Kind)
-        {
-            default:
-                return ParseExprStmt((int)BindingPower.None);
-        }
-    }
-
-    // Method for Pratt Parsing Expressions
-    internal Expr ParseExpr(int bindingPower)
-    {
-        if (_prefixes.TryGetValue(_currToken.Kind, out PrefixParselet prefixParselet))
-        {
-            Expr left = prefixParselet((int)BindingPower.Prefix);
-
-            while (Peek().Kind != TokenKind.Eof && Peek().Kind != TokenKind.Semicolon && bindingPower < PeekBindingPower())
-            {
-                Advance();
-                if (_infixes.TryGetValue(_currToken.Kind, out InfixParselet infixParselet))
-                    left = infixParselet(left, PeekBindingPower());
-            }
-
-            return left;
-        }
-
-        return null;
-    }
-
-    private int PeekBindingPower()
-    {
-        if (_infixBindingPower.TryGetValue(Peek().Kind, out int bp))
-            return bp;
-        return (int)BindingPower.None;
-    }
-
     private bool IsNotEof()
     {
         return _currToken.Kind != TokenKind.Eof;

@@ -49,3 +49,16 @@ internal class BoolValue : Value
         return String.Format("(BoolValue\tValue: {0})", Value);
     }
 }
+
+internal class NilValue : Value
+{
+    internal readonly string Value = "nil";
+
+    internal override ValueType ValueKind
+    { get { return ValueType.BoolType; } }
+
+    public override string ToString()
+    {
+        return String.Format("(Nil\tValue: {0})", Value);
+    }
+}

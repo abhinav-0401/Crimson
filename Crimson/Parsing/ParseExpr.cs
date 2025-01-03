@@ -4,6 +4,33 @@ namespace Crimson.Parsing;
 
 internal partial class Parser
 {
+    // Method for Pratt Parsing Expressions
+    internal Expr ParseExpr(int bindingPower)
+    {
+        if (_prefixes.TryGetValue(_currToken.Kind, out PrefixParselet prefixParselet))
+        {
+            Expr left = prefixParselet((int)BindingPower.Prefix);
+
+            while (Peek().Kind != TokenKind.Eof && Peek().Kind != TokenKind.Semicolon && bindingPower < PeekBindingPower())
+            {
+                Advance();
+                if (_infixes.TryGetValue(_currToken.Kind, out InfixParselet infixParselet))
+                    left = infixParselet(left, PeekBindingPower());
+            }
+
+            return left;
+        }
+
+        return null;
+    }
+
+    private int PeekBindingPower()
+    {
+        if (_infixBindingPower.TryGetValue(Peek().Kind, out int bp))
+            return bp;
+        return (int)BindingPower.None;
+    }
+
     internal Expr ParseNumLitExpr(int bindingPower)
     {
         string literal = _currToken.Literal;
@@ -31,6 +58,11 @@ internal partial class Parser
             return new BoolLitExpr(false, _currToken);
         }
 
+    }
+
+    internal Expr ParseNilLitExpr(int bindingPower)
+    {
+        return new NilLitExpr();
     }
 
     internal Expr ParsePrefixExpr(int bindingPower)

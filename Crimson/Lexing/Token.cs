@@ -44,8 +44,10 @@ internal enum TokenKind
     Else,   // ELSE
     Return, // RETURN
     Print,  // PRINT
+    PrintAst,
     Loop,   // LOOP
     Break,   // BREAK
     True,
     False,
+    Nil,
 }

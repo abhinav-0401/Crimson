@@ -8,7 +8,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Lexer lexer = new("4 * (2 + 3) * 4;");
+        Lexer lexer = new("print_ast (2 + 3) * 4; print 4 * (2 + 3) * 4;");
         var tokens = lexer.LexTokens();
 
         Parser parser = new(tokens);
